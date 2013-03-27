@@ -14,6 +14,7 @@ namespace IdleVisualizer
     public partial class Form1 : Form
     {
         private List<byte> perc;
+        private List<bool> mouseMovement;
         private Thread refreshThread;
 
         public Form1()
@@ -21,6 +22,7 @@ namespace IdleVisualizer
             InitializeComponent();
 
             perc = new List<byte>();
+            mouseMovement = new List<bool>();
 
             refreshThread = new Thread(new ThreadStart(() =>
             {
@@ -39,12 +41,13 @@ namespace IdleVisualizer
 
             int x = 0;
             int y;
+            int step = (int)Math.Ceiling(perc.Count / (float)Width);
 
-            foreach (char p in perc)
+            for (int i = 0; i < perc.Count; i+=step )
             {
                 x++;
-                y = this.Height - p;
-                e.Graphics.FillRectangle(Brushes.Black, x, y, 1, y);
+                y = this.Height - (perc[i]);
+                e.Graphics.FillRectangle(mouseMovement[i] ? Brushes.Red : Brushes.Black, x, y, 1, y);
             }
         }
         
@@ -57,9 +60,12 @@ namespace IdleVisualizer
                 int cpuNumber = db.ReadInt32();
 
                 perc.Clear();
+                mouseMovement.Clear();
 
                 while (db.BaseStream.Position < db.BaseStream.Length - 1)
                 {
+                    mouseMovement.Add(db.ReadBoolean());
+
                     for (int i = 0; i < cpuNumber; i++)
                     {
                         byte idlePerc = db.ReadByte();

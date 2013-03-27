@@ -1,0 +1,12 @@
+1.0 
+	* First Version
+	* Storing in a binary file
+	* Storing CPU(s) total usage
+	* Storing movements of mouse
+	* Using SIGAR library
+
+1.1
+	* Storing LogOff, Shutdown, Reset, Hibernate and Restart
+	* Storing in a SQLite database
+	* Autoruning after boot
+	* Using SQLiteCPP library
